@@ -37,5 +37,6 @@ Exported 2026-10-04 from the `support` repo, `apps/kb/` → `src/`.
 
 ## Incident 4471 review
 
-The signed KB page is `src/routes/kb/incidents/4471/+page.svx`. Its desk-facing HTML preview,
-including the report counts and timeline from this export, is `docs/4471.html`.
+The signed KB page is `src/routes/kb/incidents/4471/causes/+page.svx`. Its desk-facing HTML
+preview, including the report counts and timeline from this export, is `docs/4471-causes.html`.
+The desk's own page, `src/routes/kb/incidents/4471/+page.svx`, is unchanged from the export.

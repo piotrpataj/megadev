@@ -1,54 +1,36 @@
 ---
 layout: runbook
-title: '#4471 · two date causes'
+title: '#4471 · dates parse mm/dd in eu locales'
 owner: support desk
-status: split
-reviewed: 2026-10-28
-signature: piotrpataj
+status: known
+reviewed: 2026-09-30
 ---
 
 <script>
   import CauseTable from '#lib/kb/CauseTable.svelte';
   import QueueTimeline from '#lib/kb/QueueTimeline.svelte';
   import Callout from '#lib/kb/Callout.svelte';
-  import RenderStamp from '#lib/kb/RenderStamp.svelte';
 </script>
 
-The desk merged reports about dates into `#4471` as one known issue. After deduplicating by
-report ID and classifying each report with its tenant's locale, booking form, and channel, the
-export shows two distinct causes.
+Since April, people have told us their bookings land on the wrong day: a month flipped. By
+4 October the desk had **412 reports**.
 
-The export overlaps some report rows. The table counts unique IDs so duplicates do not inflate
-either issue's total.
+**Merged as one issue.** The parser reads dates month first, and our tenants write the day
+first. The fix is queued.
 
 <Callout>
-Split the reports by cause. Each cause has its own GitHub issue and report count.
+Known. One issue, one fix queued.
 </Callout>
 
-## Causes in the merged ticket
+## What was merged
 
-`meta.intakeTag` is an intake guess, not a cause. The classifier uses tenant locale, booking
-form, and channel:
+<CauseTable ticket={4471} />
 
-- **parser**: the shared parser reads month first for day-first tenants.
-- **hint**: booking-v3 displays `MM/DD/YYYY`, while the form reads dates using the tenant's
-  day-first convention.
-
-<CauseTable
-  ticket={4471}
-  issues={{
-    parser: { number: 1, url: 'https://github.com/piotrpataj/megadev/issues/1' },
-    hint: { number: 2, url: 'https://github.com/piotrpataj/megadev/issues/2' },
-  }}
-/>
-
-## Reports over time
-
-The desk kept receiving and merging reports while the incident was open.
+## Since April
 
 <QueueTimeline ticket={4471} />
 
-Five reports in the desk notes describe a one-day move. They remain in the parser group by
-tenant and form, and the table footnotes them there.
+## Lessons
 
-<RenderStamp {signature} />
+- A big ticket is mostly one bug reported many times. Merge early, count once.
+- Write the page while the queue is still in your head.

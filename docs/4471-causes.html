@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>#4471 · two date causes · support kb</title>
+    <title>#4471 · two date causes, two outcomes · support kb</title>
     <style>
       :root {
         --bg: #fbfaf7; --fg: #1d1d1b; --muted: #6b6a66; --line: #e3e0d8;
@@ -46,31 +46,41 @@
     <main>
       <header>
         <a class="crumb" href="/kb">support desk · kb</a>
-        <h1>#4471 · two date causes</h1>
+        <h1>#4471 · two date causes, two outcomes</h1>
         <p class="meta">
-          <span>owner <b>support desk</b></span>
-          <span class="status">split</span>
+          <span>owner <b>piotrpataj</b></span>
+          <span class="status">closed</span>
           <span>reviewed 2026-10-28</span>
         </p>
       </header>
 
-      <p>The desk merged reports about dates into <code>#4471</code> as one known issue. After
-        deduplicating by report ID and classifying each report with its tenant's locale, booking
-        form, and channel, the export shows two distinct causes.</p>
-      <p>The export overlaps some report rows. The table counts unique IDs so duplicates do not
-        inflate either issue's total.</p>
+      <p>The desk merged the date reports into <a href="/kb/incidents/4471">#4471</a> as one known
+        issue. The reports have two causes. Each cause has its own ticket and its own outcome.</p>
 
-      <aside>Split the reports by cause. Each cause has its own GitHub issue and report count.</aside>
+      <aside>#4471 closed on 5 October. The parser cause is fixed. The hint cause is won't fix.</aside>
 
-      <h2>Causes in the merged ticket</h2>
-      <p><code>meta.intakeTag</code> is an intake guess, not a cause. The classifier uses tenant
-        locale, booking form, and channel:</p>
-      <ul>
-        <li><strong>parser</strong>: the shared parser reads month first for day-first tenants.</li>
-        <li><strong>hint</strong>: booking-v3 displays <code>MM/DD/YYYY</code>, while the form
-          reads dates using the tenant's day-first convention.</li>
-      </ul>
+      <h2>Causes and outcomes</h2>
+      <table>
+        <thead><tr><th>cause</th><th>what happens</th><th>desk outcome</th><th>ticket</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><code>parser</code></td>
+            <td>The shared parser reads dates month first. Our tenants write the day first.</td>
+            <td>fixed: <code>fix(dates): parse dd/mm for eu locales</code></td>
+            <td><a href="https://github.com/piotrpataj/megadev/issues/1">#1</a>, closed as completed</td>
+          </tr>
+          <tr>
+            <td><code>hint</code></td>
+            <td>The booking-v3 form hints <code>MM/DD/YYYY</code>, so people type the month first. The form reads the date the tenant's way, day first.</td>
+            <td>won't fix: booking-v3 form retired</td>
+            <td><a href="https://github.com/piotrpataj/megadev/issues/2">#2</a>, closed as not planned</td>
+          </tr>
+        </tbody>
+      </table>
 
+      <h2>How many reports each cause covers</h2>
+      <p>The table counts each report ID once. <code>meta.intakeTag</code> is the intake guess, not
+        the cause. The cause comes from the tenant's locale and booking form.</p>
       <p class="sum"><strong>412</strong> distinct reports merged into #4471 ·
         <strong>2</strong> causes · 15 duplicate rows excluded</p>
       <table>
@@ -91,8 +101,7 @@
         </tbody>
       </table>
 
-      <h2>Reports over time</h2>
-      <p>The desk kept receiving and merging reports while the incident was open.</p>
+      <h2>Since April</h2>
       <figure>
         <svg viewBox="0 0 648 140" role="img" aria-label="reports received and merged into #4471, per week">
           <rect class="in" x="2" y="106.30" width="9" height="3.70" />
@@ -160,8 +169,11 @@
         <figcaption><span class="key in"></span> received · <span class="key merged"></span> merged into #4471 · per week</figcaption>
       </figure>
 
-      <p class="note">Five reports in the desk notes describe a one-day move. They remain in the
-        parser group by tenant and form, and the table footnotes them there.</p>
+      <h2>Lessons</h2>
+      <ul>
+        <li>Count once by report ID before you count causes.</li>
+        <li>One merged ticket can hide more than one cause. Check the tenant and the form, not the tag.</li>
+      </ul>
       <p class="stamp">desk ref <b>DR-SR19-4V9S</b></p>
       <footer>Pages are written by people. Tables and charts are built from data at render time.</footer>
     </main>

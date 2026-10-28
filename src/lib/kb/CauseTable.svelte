@@ -5,7 +5,7 @@
   import { tenantOf } from '#lib/kb/locales';
 
   type LinkedIssue = { number: number; url: string };
-  let { ticket, issues }: { ticket: number; issues: Partial<Record<Cause, LinkedIssue>> } = $props();
+  let { ticket, issues = {} }: { ticket: number; issues?: Partial<Record<Cause, LinkedIssue>> } = $props();
 
   const sourceRows = reports as Report[];
   const uniqueReports = $derived(uniqueById(sourceRows));

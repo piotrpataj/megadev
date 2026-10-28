@@ -1,0 +1,53 @@
+---
+layout: runbook
+title: '#4471 · two date causes, two outcomes'
+owner: piotrpataj
+status: closed
+reviewed: 2026-10-28
+signature: piotrpataj
+---
+
+<script>
+  import CauseTable from '#lib/kb/CauseTable.svelte';
+  import QueueTimeline from '#lib/kb/QueueTimeline.svelte';
+  import Callout from '#lib/kb/Callout.svelte';
+  import RenderStamp from '#lib/kb/RenderStamp.svelte';
+</script>
+
+The desk merged the date reports into [#4471](/kb/incidents/4471) as one known issue. The
+reports have two causes. Each cause has its own ticket and its own outcome.
+
+<Callout>
+#4471 closed on 5 October. The parser cause is fixed. The hint cause is won't fix.
+</Callout>
+
+## Causes and outcomes
+
+| cause | what happens | desk outcome | ticket |
+|---|---|---|---|
+| `parser` | The shared parser reads dates month first. Our tenants write the day first. | fixed: `fix(dates): parse dd/mm for eu locales` | [#1](https://github.com/piotrpataj/megadev/issues/1), closed as completed |
+| `hint` | The booking-v3 form hints `MM/DD/YYYY`, so people type the month first. The form reads the date the tenant's way, day first. | won't fix: booking-v3 form retired | [#2](https://github.com/piotrpataj/megadev/issues/2), closed as not planned |
+
+## How many reports each cause covers
+
+The table counts each report ID once. `meta.intakeTag` is the intake guess, not the cause.
+The cause comes from the tenant's locale and booking form.
+
+<CauseTable
+  ticket={4471}
+  issues={{
+    parser: { number: 1, url: 'https://github.com/piotrpataj/megadev/issues/1' },
+    hint: { number: 2, url: 'https://github.com/piotrpataj/megadev/issues/2' },
+  }}
+/>
+
+## Since April
+
+<QueueTimeline ticket={4471} />
+
+## Lessons
+
+- Count once by report ID before you count causes.
+- One merged ticket can hide more than one cause. Check the tenant and the form, not the tag.
+
+<RenderStamp {signature} />
