@@ -1,52 +1,40 @@
 <script lang="ts">
   import reports from '#lib/data/reports-4471.json';
   import notes from '#lib/data/desk-notes.json';
-  import { groupByCause, readAs, uniqueById, type Cause, type CauseGroup, type Report } from '#lib/kb/causes';
+  import { groupByCause, readAs, ticketCause, uniqueById, type Report } from '#lib/kb/causes';
   import { tenantOf } from '#lib/kb/locales';
 
-  type LinkedIssue = { number: number; url: string };
-  let { ticket, issues = {} }: { ticket: number; issues?: Partial<Record<Cause, LinkedIssue>> } = $props();
+  let { ticket }: { ticket: number } = $props();
 
-  const sourceRows = reports as Report[];
-  const uniqueReports = $derived(uniqueById(sourceRows));
-  const duplicateRows = $derived(sourceRows.length - uniqueReports.length);
-  const merged = $derived(uniqueReports.filter((r) => r.mergedInto === ticket));
+  const merged = $derived(uniqueById(reports as Report[]).filter((r) => r.mergedInto === ticket));
   const groups = $derived(groupByCause(merged, tenantOf));
+  const owner = $derived(ticketCause(groups, ticket));
   const tags = (g: { taggedAs: Record<string, number> }) =>
     Object.entries(g.taggedAs)
       .sort((a, b) => b[1] - a[1])
       .map(([tag, n]) => `${tag} ×${n}`)
       .join(' · ');
-  const issueFor = (cause: CauseGroup['cause']): LinkedIssue | undefined =>
-    cause === 'parser' || cause === 'hint' ? issues[cause] : undefined;
 </script>
 
 <p class="sum">
-  <strong>{merged.length}</strong> distinct reports merged into #{ticket} ·
+  <strong>{merged.length}</strong> reports merged into #{ticket} ·
   <strong>{groups.length}</strong>
-  {groups.length === 1 ? 'cause' : 'causes'} · {duplicateRows} duplicate rows excluded
+  {groups.length === 1 ? 'cause' : 'causes'}
 </p>
 
 <table>
   <thead>
-    <tr><th>cause</th><th>reports</th><th>tagged as</th><th>tenants</th><th>seen</th><th>GitHub issue</th></tr>
+    <tr><th>cause</th><th>reports</th><th>tagged as</th><th>tenants</th><th>seen</th><th></th></tr>
   </thead>
   <tbody>
     {#each groups as g (g.cause)}
-      {@const issue = issueFor(g.cause)}
-      <tr>
+      <tr class:wrong={g.cause !== owner}>
         <td><code>{g.cause}</code></td>
         <td>{g.reports.length}</td>
         <td class="tags">{tags(g)}</td>
         <td>{g.tenants}</td>
         <td>{g.firstSeen} → {g.lastSeen}</td>
-        <td>
-          {#if issue}
-            <a href={issue.url}>#{issue.number}</a>
-          {:else}
-            no issue recorded
-          {/if}
-        </td>
+        <td>{g.cause === owner ? `#${ticket}` : 'not this ticket — no ticket of its own'}</td>
       </tr>
     {/each}
   </tbody>
@@ -63,4 +51,6 @@
   .sum { font-size: 1.1rem; }
   .tags { color: var(--muted); font-size: 0.85em; }
   .note { color: var(--muted); font-size: 0.85em; }
+  .wrong td { background: var(--warn-bg); }
+  .wrong td:last-child { color: var(--warn); font-weight: 600; }
 </style>

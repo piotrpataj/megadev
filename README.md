@@ -37,6 +37,11 @@ Exported 2026-10-04 from the `support` repo, `apps/kb/` → `src/`.
 
 ## Incident 4471 review
 
-The signed KB page is `src/routes/kb/incidents/4471/causes/+page.svx`. Its desk-facing HTML
-preview, including the report counts and timeline from this export, is `docs/4471-causes.html`.
-The desk's own page, `src/routes/kb/incidents/4471/+page.svx`, is unchanged from the export.
+The signed KB page is `src/routes/kb/incidents/4471/causes/+page.svx`. The desk's own page,
+`src/routes/kb/incidents/4471/+page.svx`, and everything in `src/lib` are unchanged from the export.
+
+## Render
+
+`npm install` and `npm run build` render every page through the kb's own layout and components
+(SvelteKit, mdsvex, adapter-static) into `docs/`. The page as the desk sees it is
+`docs/kb/incidents/4471/causes/index.html`; GitHub Pages serves `docs/`.

@@ -31,15 +31,10 @@ reports have two causes. Each cause has its own ticket and its own outcome.
 ## How many reports each cause covers
 
 The table counts each report ID once. `meta.intakeTag` is the intake guess, not the cause.
-The cause comes from the tenant's locale and booking form.
+The cause comes from the tenant's locale and booking form. The desk's table still reads #4471
+as one parser ticket: the `hint` row is the cause that now has its own ticket, #2.
 
-<CauseTable
-  ticket={4471}
-  issues={{
-    parser: { number: 1, url: 'https://github.com/piotrpataj/megadev/issues/1' },
-    hint: { number: 2, url: 'https://github.com/piotrpataj/megadev/issues/2' },
-  }}
-/>
+<CauseTable ticket={4471} />
 
 ## Since April
 
